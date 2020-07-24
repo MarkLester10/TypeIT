@@ -1,5 +1,3 @@
-//based on https://dribbble.com/shots/3913847-404-page
-
 var pageX = $(document).width();
 var pageY = $(document).height();
 var mouseY = 0;
@@ -32,47 +30,49 @@ const load = document.querySelector(".loading-container");
 const boxDesc = document.querySelector(".box__description");
 const boxGhost = document.querySelector(".box__ghost");
 const gameArea = document.querySelector("#game-area");
+const modalScore = document.querySelector("#modal-score");
+const gameScoreModal = document.querySelector(".game-over-modal");
+const playAgain = document
+  .querySelector("#play-again")
+  .addEventListener("click", function (e) {
+    window.location.reload();
+    e.preventDefault();
+  });
 
 const modal = document.querySelector(".inst-modal");
-document.querySelector(".fa").addEventListener("click", showInstruction);
+const instructions = document.querySelector(".fa");
 
 //Initialize game
 document
   .querySelector(".box__button")
   .addEventListener("click", function init(e) {
-    boxDesc.style.display = "none";
-    boxGhost.style.display = "none";
-    load.style.display = "block";
-
-    fetch("https://random-word-api.herokuapp.com/word?number=100") // .all to get all words
-      .then((res) => res.json())
-      .then((data) => {
-        load.style.display = "none";
-        gameArea.style.display = "block";
-        words = data;
-        //call countdown
-        setInterval(countdown, 1000); //this will repeat countdown every 1s
-        showWords(words);
-      });
-
-    seconds.innerHTML = time - 1 + "s";
-    level.innerHTML = "Easy Round";
-    //Start matching on the user input
-    wordInput.addEventListener("input", startGame);
-    //check status of game
-    setInterval(checkStatus, 50);
-
+    initialize();
     e.preventDefault();
   });
 
-//toggle modal
-function showInstruction() {
-  modal.style.display = "block";
-  modal.addEventListener("click", function (e) {
-    if ((e.target.className = "inst-modal")) {
-      modal.style.display = "none";
-    }
-  });
+function initialize() {
+  boxDesc.style.display = "none";
+  boxGhost.style.display = "none";
+  instructions.style.display = "none";
+  load.style.display = "block";
+
+  fetch("https://random-word-api.herokuapp.com/word?number=100") // .all to get all words
+    .then((res) => res.json())
+    .then((data) => {
+      load.style.display = "none";
+      gameArea.style.display = "block";
+      words = data;
+      //call countdown
+      setInterval(countdown, 1000); //this will repeat countdown every 1s
+      showWords(words);
+    });
+
+  seconds.innerHTML = time - 1 + "s";
+  level.innerHTML = "Easy Round";
+  //Start matching on the user input
+  wordInput.addEventListener("input", startGame);
+  //check status of game
+  setInterval(checkStatus, 50);
 }
 
 //Levels
@@ -105,8 +105,10 @@ function startGame() {
 
   if (score === -1) {
     scoreDisplay.innerHTML = 0;
+    modalScore.innerHTML = 0;
   } else {
     scoreDisplay.innerHTML = score;
+    modalScore.innerHTML = score;
   }
 }
 
@@ -128,6 +130,12 @@ function matchWords() {
 function showWords(words) {
   //generate random index
   const randIdx = Math.floor(Math.random() * words.length);
+  wordSingle = words[randIdx];
+  words.forEach(function (word, idx) {
+    if (wordSingle === word) {
+      words.splice(idx, 1);
+    }
+  });
   //output random word
   currentWord.innerHTML = words[randIdx];
 }
@@ -150,11 +158,16 @@ function countdown() {
 function checkStatus() {
   wordInput.focus();
   if (!isPlaying && time === 0) {
+    gameScoreModal.style.display = "block";
     currentLevel = levels.easy;
     message.innerHTML = '<span class="game-over">Game Over</span>';
     score = -1;
     level.innerHTML = "Easy Round";
   }
+}
+
+function remove() {
+  gameScoreModal.style.display = "none";
 }
 
 //chnange levek
