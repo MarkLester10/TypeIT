@@ -36,12 +36,14 @@ const playAgain = document
   .querySelector("#play-again")
   .addEventListener("click", function (e) {
     window.location.reload();
+    backgroundMusic.play();
     e.preventDefault();
   });
 
 const modal = document.querySelector(".inst-modal");
 const instructions = document.querySelector(".fa");
 
+const backgroundMusic = document.querySelector("#bg-music");
 //Initialize game
 document
   .querySelector(".box__button")
@@ -51,6 +53,7 @@ document
   });
 
 function initialize() {
+  backgroundMusic.play();
   boxDesc.style.display = "none";
   boxGhost.style.display = "none";
   instructions.style.display = "none";
