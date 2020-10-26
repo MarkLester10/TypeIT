@@ -1,6 +1,6 @@
 # TypeIT
 
-A simple word-typing game built with JavaScript and Random Word Api
+A simple word-typing game built with vanilla JavaScript
 
 ## Try it out
 
