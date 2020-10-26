@@ -59,9 +59,10 @@ function initialize() {
   instructions.style.display = "none";
   load.style.display = "block";
 
-  fetch("https://random-word-api.herokuapp.com/word?number=100") // .all to get all words
+  fetch("words.json") // .all to get all words
     .then((res) => res.json())
     .then((data) => {
+      console.log(data);
       load.style.display = "none";
       gameArea.style.display = "block";
       words = data;
